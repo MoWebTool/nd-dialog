@@ -273,6 +273,17 @@ describe('dialog', function() {
       expect($('.ui-mask').is(':visible')).to.be(false);
     });
 
+    it('should disappear when click mask', function() {
+      example = new Dialog({
+        content: 'foobar',
+        hideOnClickMask: true
+      });
+      example.show();
+      expect(example.element.is(':visible')).to.be(true);
+      mask.element.click();
+      expect(example.element.is(':visible')).to.be(false);
+    });
+
     it('should not disappear when click mask', function() {
       example = new Dialog({
         content: 'foobar'
@@ -283,23 +294,26 @@ describe('dialog', function() {
       expect(example.element.is(':visible')).to.be(true);
     });
 
-    it('should not hide the mask when last dialog hide', function() {
+    it('should hide the mask when last dialog hide', function() {
       example = new Dialog({
         content: 'foo'
       });
       example.show();
+
       expect(mask._dialogs.length).to.be(1);
       expect(mask.get('visible')).to.be(true);
       expect(mask.element.next()[0]).to.be(example.element[0]);
+
       var example2 = new Dialog({
         content: 'bar'
       });
+
       example2.show();
       expect(mask._dialogs.length).to.be(2);
       expect(mask.get('visible')).to.be(true);
       expect(mask.element.next()[0]).to.be(example2.element[0]);
 
-      example2.hide();
+      example2.hide(); // will destroy example2
       expect(mask._dialogs.length).to.be(1);
       expect(mask.get('visible')).to.be(true);
       expect(mask.element.next()[0]).to.be(example.element[0]);
@@ -309,6 +323,37 @@ describe('dialog', function() {
       expect(mask.get('visible')).to.be(false);
 
       example2.destroy();
+    });
+
+    it('should not hide the mask when other dialog is visible', function() {
+      example = new Dialog({
+        content: 'foo'
+      });
+      example.show();
+
+      expect(mask._dialogs.length).to.be(1);
+      expect(mask.get('visible')).to.be(true);
+      expect(mask.element.next()[0]).to.be(example.element[0]);
+
+      var example2 = new Dialog({
+        content: 'bar'
+      }).after('hide', function() {
+        this.destroy();
+      });
+
+      example2.show();
+      expect(mask._dialogs.length).to.be(2);
+      expect(mask.get('visible')).to.be(true);
+      expect(mask.element.next()[0]).to.be(example2.element[0]);
+
+      example2.hide(); // will destroy example2
+      expect(mask._dialogs.length).to.be(1);
+      expect(mask.get('visible')).to.be(true);
+      expect(mask.element.next()[0]).to.be(example.element[0]);
+
+      example.hide();
+      expect(mask._dialogs.length).to.be(0);
+      expect(mask.get('visible')).to.be(false);
     });
 
     it('set hasMask works', function() {

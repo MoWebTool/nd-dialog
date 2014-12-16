@@ -57,6 +57,9 @@ var Dialog = Overlay.extend({
     // 是否有背景遮罩层
     hasMask: true,
 
+    // 是否点击遮罩关闭对话框
+    hideOnClickMask: false,
+
     // 关闭按钮可以自定义
     closeTpl: '×',
 
@@ -185,9 +188,13 @@ var Dialog = Overlay.extend({
   // 覆盖 overlay，提供动画
   _onRenderVisible: function(val) {
     if (val) {
-      if (this.get('effect') === 'fade') {
+      var effect = this.get('effect');
+      if (effect === 'fade') {
         // 固定 300 的动画时长，暂不可定制
         this.element.fadeIn(300);
+      } else if (typeof effect === 'function') {
+        // 支持自定义 effect，采用 function
+        effect.call(this, this.element);
       } else {
         this.element.show();
       }
@@ -213,27 +220,37 @@ var Dialog = Overlay.extend({
     var that = this;
 
     // 存放 mask 对应的对话框
-    mask._dialogs = mask._dialogs || [];
+    var dialogs = mask._dialogs = mask._dialogs || [];
 
     this.after('show', function() {
       if (!this.get('hasMask')) {
         return;
       }
+
       // not using the z-index
       // because multiable dialogs may share same mask
-      mask.set('zIndex', that.get('zIndex')).show();
-      mask.element.insertBefore(that.element);
+      mask.set('zIndex', this.get('zIndex')).show();
+      mask.element.insertBefore(this.element);
 
       // 避免重复存放
       var existed = false;
-      for (var i = 0; i < mask._dialogs.length; i++) {
-        if (mask._dialogs[i] === that) {
+
+      for (var i = 0; i < dialogs.length; i++) {
+        if (dialogs[i] === this) {
           existed = true;
         }
       }
+
       // 依次存放对应的对话框
       if (!existed) {
-        mask._dialogs.push(that);
+        dialogs.push(this);
+      }
+
+      // 点击遮罩关闭对话框
+      if(this.get('hideOnClickMask')) {
+        mask.delegateEvents('click.' + this.cid, function() {
+          that.hide();
+        });
       }
     });
 
@@ -246,13 +263,25 @@ var Dialog = Overlay.extend({
       return;
     }
 
-    mask._dialogs && mask._dialogs.pop();
-    if (mask._dialogs && mask._dialogs.length > 0) {
-      var last = mask._dialogs[mask._dialogs.length - 1];
+    var dialogs = mask._dialogs;
+
+    if (dialogs) {
+      if (dialogs[dialogs.length - 1] === this) {
+        dialogs.pop();
+      }
+    }
+
+    if (dialogs && dialogs.length > 0) {
+      var last = dialogs[dialogs.length - 1];
       mask.set('zIndex', last.get('zIndex'));
       mask.element.insertBefore(last.element);
     } else {
       mask.hide();
+    }
+
+    // 点击遮罩关闭对话框
+    if(this.get('hideOnClickMask')) {
+      mask.undelegateEvents('click.' + this.cid);
     }
   },
 
