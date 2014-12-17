@@ -263,18 +263,33 @@ var Dialog = Overlay.extend({
       return;
     }
 
-    var dialogs = mask._dialogs;
+    var dialogs = mask._dialogs,
+      // 当前是否最后一个 dialog，即当前是否位于顶层
+      currentIsLast = false;
 
     if (dialogs) {
+      // check last
       if (dialogs[dialogs.length - 1] === this) {
+        currentIsLast = true;
         dialogs.pop();
+      }
+      // check others
+      else {
+        for (var i = 0; i < dialogs.length - 1; i++) {
+          if (dialogs[i] === this) {
+            dialogs.splice(i, 1);
+          }
+        }
       }
     }
 
     if (dialogs && dialogs.length > 0) {
-      var last = dialogs[dialogs.length - 1];
-      mask.set('zIndex', last.get('zIndex'));
-      mask.element.insertBefore(last.element);
+      // 如果当前是顶层，则寻找新的顶层，否则不做处理
+      if (currentIsLast) {
+        var last = dialogs[dialogs.length - 1];
+        mask.set('zIndex', last.get('zIndex'));
+        mask.element.insertBefore(last.element);
+      }
     } else {
       mask.hide();
     }

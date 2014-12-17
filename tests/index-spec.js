@@ -356,6 +356,37 @@ describe('dialog', function() {
       expect(mask.get('visible')).to.be(false);
     });
 
+    it('should remove from mask._dialogs when a NOT last dialog is hide', function() {
+      example = new Dialog({
+        content: 'foo'
+      });
+      example.show();
+
+      expect(mask._dialogs.length).to.be(1);
+      expect(mask.get('visible')).to.be(true);
+      expect(mask.element.next()[0]).to.be(example.element[0]);
+
+      var example2 = new Dialog({
+        content: 'bar'
+      });
+
+      example2.show();
+      expect(mask._dialogs.length).to.be(2);
+      expect(mask.get('visible')).to.be(true);
+      expect(mask.element.next()[0]).to.be(example2.element[0]);
+
+      example.hide();
+      expect(mask._dialogs.length).to.be(1);
+      expect(mask.get('visible')).to.be(true);
+      expect(mask.element.next()[0]).to.be(example2.element[0]);
+
+      example2.hide();
+      expect(mask._dialogs.length).to.be(0);
+      expect(mask.get('visible')).to.be(false);
+
+      example2.destroy();
+    });
+
     it('set hasMask works', function() {
       var example = new Dialog({
         content: 'foobar'
