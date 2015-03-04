@@ -20,7 +20,6 @@ function toTabed(element) {
   }
 }
 
-
 // Dialog
 // ---
 // Dialog 是通用对话框组件，提供显隐关闭、遮罩层、内容区域自定义功能。
@@ -94,7 +93,6 @@ var Dialog = Overlay.extend({
       }
     }
   },
-
 
   parseElement: function() {
     this.set('model', {
