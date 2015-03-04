@@ -95,10 +95,6 @@ var Dialog = Overlay.extend({
   },
 
   parseElement: function() {
-    this.set('model', {
-      classPrefix: this.get('classPrefix')
-    });
-
     Dialog.superclass.parseElement.call(this);
 
     this.contentElement = this.$('[data-role=content]');
