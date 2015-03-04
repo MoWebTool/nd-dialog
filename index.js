@@ -270,8 +270,10 @@ var Dialog = Overlay.extend({
       // check others
       else {
         for (var i = 0; i < dialogs.length - 1; i++) {
+          /*jshint maxdepth:4*/
           if (dialogs[i] === this) {
             dialogs.splice(i, 1);
+            break;
           }
         }
       }
