@@ -63,7 +63,7 @@ var Dialog = Overlay.extend({
     closeTpl: '×',
 
     // 默认宽度
-    width: 500,
+    width: 'auto',
 
     // 默认高度
     height: null,
