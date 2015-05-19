@@ -59,6 +59,9 @@ var Dialog = Overlay.extend({
     // 是否点击遮罩关闭对话框
     hideOnClickMask: false,
 
+    // 是否 Esc 键关闭对话框
+    hideOnKeyEscape: true,
+
     // 关闭按钮可以自定义
     closeTpl: '×',
 
@@ -310,11 +313,13 @@ var Dialog = Overlay.extend({
 
   // 绑定键盘事件，ESC关闭窗口
   _setupKeyEvents: function() {
-    this.delegateEvents($(document), 'keyup.esc', function(e) {
-      if (e.keyCode === 27) {
-        this.get('visible') && this.hide();
-      }
-    });
+    if (this.get('hideOnKeyEscape')) {
+      this.delegateEvents($(document), 'keyup.esc', function(e) {
+        if (e.keyCode === 27) {
+          this.get('visible') && this.hide();
+        }
+      });
+    }
   },
 
   _ajaxHtml: function() {
