@@ -77,11 +77,11 @@ var Dialog = Overlay.extend({
     // 不用解释了吧
     zIndex: 999,
 
-    // 默认定位左右居中，略微靠上
+    // 默认定位左右居中
     align: {
       value: {
         selfXY: ['50%', '50%'],
-        baseXY: ['50%', '42%']
+        baseXY: ['50%', '50%']
       },
       getter: function(val) {
         // 高度超过窗口的 42/50 浮层头部顶住窗口
