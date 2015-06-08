@@ -89,7 +89,7 @@ var Dialog = Overlay.extend({
         if (this.element.height() > $(window).height() * 0.84) {
           return {
             selfXY: ['50%', '0'],
-            baseXY: ['50%', '0']
+            baseXY: ['50%', '70px']
           };
         }
         return val;
