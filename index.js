@@ -20,7 +20,6 @@ function toTabed(element) {
   }
 }
 
-
 // Dialog
 // ---
 // Dialog 是通用对话框组件，提供显隐关闭、遮罩层、内容区域自定义功能。
@@ -60,11 +59,14 @@ var Dialog = Overlay.extend({
     // 是否点击遮罩关闭对话框
     hideOnClickMask: false,
 
+    // 是否 Esc 键关闭对话框
+    hideOnKeyEscape: true,
+
     // 关闭按钮可以自定义
     closeTpl: '×',
 
     // 默认宽度
-    width: 500,
+    width: 'auto',
 
     // 默认高度
     height: null,
@@ -75,11 +77,11 @@ var Dialog = Overlay.extend({
     // 不用解释了吧
     zIndex: 999,
 
-    // 默认定位左右居中，略微靠上
+    // 默认定位左右居中
     align: {
       value: {
         selfXY: ['50%', '50%'],
-        baseXY: ['50%', '42%']
+        baseXY: ['50%', '50%']
       },
       getter: function(val) {
         // 高度超过窗口的 42/50 浮层头部顶住窗口
@@ -87,7 +89,7 @@ var Dialog = Overlay.extend({
         if (this.element.height() > $(window).height() * 0.84) {
           return {
             selfXY: ['50%', '0'],
-            baseXY: ['50%', '0']
+            baseXY: ['50%', '70px']
           };
         }
         return val;
@@ -95,12 +97,7 @@ var Dialog = Overlay.extend({
     }
   },
 
-
   parseElement: function() {
-    this.set('model', {
-      classPrefix: this.get('classPrefix')
-    });
-
     Dialog.superclass.parseElement.call(this);
 
     this.contentElement = this.$('[data-role=content]');
@@ -276,8 +273,10 @@ var Dialog = Overlay.extend({
       // check others
       else {
         for (var i = 0; i < dialogs.length - 1; i++) {
+          /*jshint maxdepth:4*/
           if (dialogs[i] === this) {
             dialogs.splice(i, 1);
+            break;
           }
         }
       }
@@ -314,11 +313,13 @@ var Dialog = Overlay.extend({
 
   // 绑定键盘事件，ESC关闭窗口
   _setupKeyEvents: function() {
-    this.delegateEvents($(document), 'keyup.esc', function(e) {
-      if (e.keyCode === 27) {
-        this.get('visible') && this.hide();
-      }
-    });
+    if (this.get('hideOnKeyEscape')) {
+      this.delegateEvents($(document), 'keyup.esc', function(e) {
+        if (e.keyCode === 27) {
+          this.get('visible') && this.hide();
+        }
+      });
+    }
   },
 
   _ajaxHtml: function() {
