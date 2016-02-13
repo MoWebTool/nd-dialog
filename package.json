@@ -1,6 +1,6 @@
 {
   "name": "nd-dialog",
-  "version": "1.0.0",
+  "version": "3.0.0",
   "description": "通用对话框容器，提供显隐关闭、遮罩层、内嵌iframe、内容区域自定义以及模态对话框等功能。",
   "keywords": [],
   "homepage": "https://github.com/ndfront/nd-dialog",
@@ -17,18 +17,18 @@
   },
   "licenses": "MIT",
   "devDependencies": {},
-  "spm": {
-    "main": "index.js",
-    "dependencies": {
-      "handlebars-runtime": "3.0.1",
-      "jquery": "1.11.1",
-      "nd-mask": "1.0.0",
-      "nd-overlay": "1.0.0",
-      "nd-template": "1.0.0"
-    },
-    "devDependencies": {
-      "expect.js": "0.3.1",
-      "sinon": "1.6.0"
-    }
+  "main": "index.js",
+  "dependencies": {
+    "handlebars": "^4.0.5",
+    "jquery": "^1.11.1",
+    "nd-mask": "^3.0.0",
+    "nd-overlay": "^3.0.0",
+    "nd-template": "^3.0.0"
+  },
+  "devDependencies": {
+    "expect.js": "^0.3.1",
+    "isparta": "^4.0.0",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3"
   }
 }

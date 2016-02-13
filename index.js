@@ -1,15 +1,14 @@
 /**
- * Description: index.js
- * Author: crossjs <liwenfu@crossjs.com>
- * Date: 2014-12-15 16:04:45
+ * @module Dialog
+ * @author crossjs <liwenfu@crossjs.com>
  */
 
 'use strict';
 
-var $ = require('jquery'),
-  Overlay = require('nd-overlay'),
-  mask = require('nd-mask'),
-  Template = require('nd-template');
+var $ = require('jquery');
+var Overlay = require('nd-overlay');
+var mask = require('nd-mask');
+var Template = require('nd-template');
 
 // Helpers
 // ----
