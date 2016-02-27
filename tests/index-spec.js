@@ -3,7 +3,7 @@
 var Dialog = require('../index');
 var expect = require('expect.js');
 var sinon = require('sinon');
-var $ = require('jquery');
+var $ = require('nd-jquery');
 var mask = require('nd-mask');
 
 // require('../src/dialog.css');
