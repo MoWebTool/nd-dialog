@@ -8,6 +8,12 @@
     "name": "crossjs",
     "email": "liwenfu@crossjs.com"
   },
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "node ./node_modules/karma/bin/karma start ./karma.conf.js",
+    "test:dev": "npm run test -- --watch"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/ndfront/nd-dialog.git"
@@ -16,18 +22,33 @@
     "url": "https://github.com/ndfront/nd-dialog/issues"
   },
   "licenses": "MIT",
-  "devDependencies": {
-    "expect.js": "^0.3.1",
-    "isparta": "^4.0.0",
-    "mocha": "^2.4.5",
-    "sinon": "^1.17.3"
-  },
   "main": "index.js",
   "dependencies": {
     "handlebars": "^4.0.5",
     "nd-mask": "^3.0.0",
     "nd-overlay": "^3.0.1",
     "nd-template": "^3.0.1",
-    "nd-jquery": "^2.2.1"
+    "nd-jquery": "^2.2.2"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "handlebars-loader": "^1.1.4",
+    "html-loader": "^0.4.3",
+    "isparta-loader": "^2.0.0",
+    "karma": "^0.13.8",
+    "karma-coverage": "^0.5.0",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.2.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.7.0",
+    "mocha": "^2.4.5",
+    "phantomjs-polyfill": "0.0.1",
+    "phantomjs-prebuilt": "^2.1.3",
+    "sinon": "^1.17.3",
+    "sinon-chai": "^2.8.0",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.14",
+    "yargs": "^4.2.0"
   }
 }

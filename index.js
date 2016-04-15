@@ -3,19 +3,19 @@
  * @author crossjs <liwenfu@crossjs.com>
  */
 
-'use strict';
+'use strict'
 
-var $ = require('nd-jquery');
-var Overlay = require('nd-overlay');
-var mask = require('nd-mask');
-var Template = require('nd-template');
+var $ = require('nd-jquery')
+var Overlay = require('nd-overlay')
+var mask = require('nd-mask')
+var Template = require('nd-template')
 
 // Helpers
 // ----
 // 让目标节点可以被 Tab
 function toTabed(element) {
   if (element.attr('tabindex') === null) {
-    element.attr('tabindex', '-1');
+    element.attr('tabindex', '-1')
   }
 }
 
@@ -35,7 +35,7 @@ var Dialog = Overlay.extend({
     trigger: {
       value: null,
       getter: function(val) {
-        return $(val);
+        return $(val)
       }
     },
 
@@ -47,8 +47,8 @@ var Dialog = Overlay.extend({
       value: null,
       setter: function(val) {
         // 判断是否是 url 地址
-        this._ajax = /^(https?:\/\/|\/|\.\/|\.\.\/)/.test(val);
-        return val;
+        this._ajax = /^(https?:\/\/|\/|\.\/|\.\.\/)/.test(val)
+        return val
       }
     },
 
@@ -89,113 +89,113 @@ var Dialog = Overlay.extend({
           return {
             selfXY: ['50%', '0'],
             baseXY: ['50%', '70px']
-          };
+          }
         }
-        return val;
+        return val
       }
     }
   },
 
   parseElement: function() {
-    Dialog.superclass.parseElement.call(this);
+    Dialog.superclass.parseElement.call(this)
 
-    this.contentElement = this.$('[data-role=content]');
+    this.contentElement = this.$('[data-role=content]')
 
     // 必要的样式
     this.contentElement.css({
       height: '100%',
       zoom: 1
-    });
+    })
 
     // 关闭按钮先隐藏
     // 后面当 onRenderCloseTpl 时，如果 closeTpl 不为空，会显示出来
     // 这样写是为了回避 arale.base 的一个问题：
     // 当属性初始值为''时，不会进入 onRender 方法
     // https://github.com/aralejs/base/issues/7
-    this.$('[data-role=close]').hide();
+    this.$('[data-role=close]').hide()
   },
 
   events: {
     'click [data-role=close]': function(e) {
-      e.preventDefault();
-      this.hide();
+      e.preventDefault()
+      this.hide()
     }
   },
 
   show: function() {
       // ajax 读入内容并 append 到容器中
     if (this._ajax) {
-      this._ajaxHtml();
+      this._ajaxHtml()
     }
 
-    Dialog.superclass.show.call(this);
-    return this;
+    Dialog.superclass.show.call(this)
+    return this
   },
 
   destroy: function() {
-    this.element.remove();
-    this._hideMask();
-    return Dialog.superclass.destroy.call(this);
+    this.element.remove()
+    this._hideMask()
+    return Dialog.superclass.destroy.call(this)
   },
 
   setup: function() {
-    Dialog.superclass.setup.call(this);
+    Dialog.superclass.setup.call(this)
 
-    this._setupTrigger();
-    this._setupMask();
-    this._setupKeyEvents();
-    this._setupFocus();
-    toTabed(this.element);
-    toTabed(this.get('trigger'));
+    this._setupTrigger()
+    this._setupMask()
+    this._setupKeyEvents()
+    this._setupFocus()
+    toTabed(this.element)
+    toTabed(this.get('trigger'))
 
     // 默认当前触发器
-    this.activeTrigger = this.get('trigger').eq(0);
+    this.activeTrigger = this.get('trigger').eq(0)
   },
 
   // onRender
   // ---
   _onRenderContent: function(val) {
     if (!this._ajax) {
-      var value;
+      var value
       // 有些情况会报错
       try {
-        value = $(val);
+        value = $(val)
       } catch (e) {
-        value = [];
+        value = []
       }
       if (value[0]) {
-        this.contentElement.empty().append(value);
+        this.contentElement.empty().append(value)
       } else {
-        this.contentElement.empty().html(val);
+        this.contentElement.empty().html(val)
       }
       // #38 #44
-      this._setPosition();
+      this._setPosition()
     }
   },
 
   _onRenderCloseTpl: function(val) {
     if (val === '') {
-      this.$('[data-role=close]').html(val).hide();
+      this.$('[data-role=close]').html(val).hide()
     } else {
-      this.$('[data-role=close]').html(val).show();
+      this.$('[data-role=close]').html(val).show()
     }
   },
 
   // 覆盖 overlay，提供动画
   _onRenderVisible: function(val) {
     if (val) {
-      var effect = this.get('effect');
+      var effect = this.get('effect')
       if (effect === 'fade') {
         // 固定 300 的动画时长，暂不可定制
-        this.element.fadeIn(300);
+        this.element.fadeIn(300)
       } else if (typeof effect === 'function') {
         // 支持自定义 effect，采用 function
-        effect.call(this, this.element);
+        effect.call(this, this.element)
       } else {
-        this.element.show();
+        this.element.show()
       }
     } else {
-      this.element.hide();
+      this.element.hide()
     }
   },
 
@@ -204,78 +204,78 @@ var Dialog = Overlay.extend({
   // 绑定触发对话框出现的事件
   _setupTrigger: function() {
     this.delegateEvents(this.get('trigger'), 'click', function(e) {
-      e.preventDefault();
+      e.preventDefault()
       // 标识当前点击的元素
-      this.activeTrigger = $(e.currentTarget);
-      this.show();
-    });
+      this.activeTrigger = $(e.currentTarget)
+      this.show()
+    })
   },
 
   // 绑定遮罩层事件
   _setupMask: function() {
-    var that = this;
+    var that = this
 
     // 存放 mask 对应的对话框
-    var dialogs = mask._dialogs = mask._dialogs || [];
+    var dialogs = mask._dialogs = mask._dialogs || []
 
     this.after('show', function() {
       if (!this.get('hasMask')) {
-        return;
+        return
       }
 
       // not using the z-index
       // because multiable dialogs may share same mask
-      mask.set('zIndex', this.get('zIndex')).show();
-      mask.element.insertBefore(this.element);
+      mask.set('zIndex', this.get('zIndex')).show()
+      mask.element.insertBefore(this.element)
 
       // 避免重复存放
-      var existed = false;
+      var existed = false
 
       for (var i = 0; i < dialogs.length; i++) {
         if (dialogs[i] === this) {
-          existed = true;
+          existed = true
         }
       }
 
       // 依次存放对应的对话框
       if (!existed) {
-        dialogs.push(this);
+        dialogs.push(this)
       }
 
       // 点击遮罩关闭对话框
       if(this.get('hideOnClickMask')) {
         mask.delegateEvents('click.' + this.cid, function() {
-          that.hide();
-        });
+          that.hide()
+        })
       }
-    });
+    })
 
-    this.after('hide', this._hideMask);
+    this.after('hide', this._hideMask)
   },
 
   // 隐藏 mask
   _hideMask: function() {
     if (!this.get('hasMask')) {
-      return;
+      return
     }
 
     var dialogs = mask._dialogs,
       // 当前是否最后一个 dialog，即当前是否位于顶层
-      currentIsLast = false;
+      currentIsLast = false
 
     if (dialogs) {
       // check last
       if (dialogs[dialogs.length - 1] === this) {
-        currentIsLast = true;
-        dialogs.pop();
+        currentIsLast = true
+        dialogs.pop()
       }
       // check others
       else {
         for (var i = 0; i < dialogs.length - 1; i++) {
-          /*jshint maxdepth:4*/
+          /*eslint max-depth:[2, 4]*/
           if (dialogs[i] === this) {
-            dialogs.splice(i, 1);
-            break;
+            dialogs.splice(i, 1)
+            break
           }
         }
       }
@@ -284,30 +284,30 @@ var Dialog = Overlay.extend({
     if (dialogs && dialogs.length > 0) {
       // 如果当前是顶层，则寻找新的顶层，否则不做处理
       if (currentIsLast) {
-        var last = dialogs[dialogs.length - 1];
-        mask.set('zIndex', last.get('zIndex'));
-        mask.element.insertBefore(last.element);
+        var last = dialogs[dialogs.length - 1]
+        mask.set('zIndex', last.get('zIndex'))
+        mask.element.insertBefore(last.element)
       }
     } else {
-      mask.hide();
+      mask.hide()
     }
 
     // 点击遮罩关闭对话框
     if(this.get('hideOnClickMask')) {
-      mask.undelegateEvents('click.' + this.cid);
+      mask.undelegateEvents('click.' + this.cid)
     }
   },
 
   // 绑定元素聚焦状态
   _setupFocus: function() {
     this.after('show', function() {
-      this.element.focus();
-    });
+      this.element.focus()
+    })
     this.after('hide', function() {
       // 关于网页中浮层消失后的焦点处理
       // http://www.qt06.com/post/280/
-      this.activeTrigger && this.activeTrigger.focus();
-    });
+      this.activeTrigger && this.activeTrigger.focus()
+    })
   },
 
   // 绑定键盘事件，ESC关闭窗口
@@ -315,20 +315,20 @@ var Dialog = Overlay.extend({
     if (this.get('hideOnKeyEscape')) {
       this.delegateEvents($(document), 'keyup.esc', function(e) {
         if (e.keyCode === 27) {
-          this.get('visible') && this.hide();
+          this.get('visible') && this.hide()
         }
-      });
+      })
     }
   },
 
   _ajaxHtml: function() {
-    var that = this;
+    var that = this
     this.contentElement.load(this.get('content'), function() {
-      that._setPosition();
-      that.trigger('complete:show');
-    });
+      that._setPosition()
+      that.trigger('complete:show')
+    })
   }
 
-});
+})
 
-module.exports = Dialog;
+module.exports = Dialog
